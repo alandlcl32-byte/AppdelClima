@@ -1,0 +1,114 @@
+<ForecastItem>:
+    orientation: "vertical"
+    size_hint: None, None
+    size: 100, 150
+    padding: 5
+    spacing: 5
+    canvas.before:
+        Color:
+            rgba: 0.2, 0.2, 0.2, 0.4
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [10,]
+    Label:
+        text: root.day
+        font_size: 16
+        color: 1,1,1,1
+        size_hint_y: None
+        height: 20
+        halign: "center"
+        valign: "middle"
+        text_size: self.size
+    Image:
+        source: root.icon_source
+        size_hint: None, None
+        size: 60, 60
+        allow_stretch: True
+        keep_ratio: True
+        pos_hint: {"center_x": 0.5}
+    Label:
+        text: root.max_temp
+        font_size: 14
+        color: 1,1,1,1
+        size_hint_y: None
+        height: 20
+    Label:
+        text: root.min_temp
+        font_size: 14
+        color: 1,1,1,1
+        size_hint_y: None
+        height: 20
+
+<WeatherLayout>:
+    FloatLayout:
+        Image:
+            source: root.background_path
+            allow_stretch: True
+            keep_ratio: False
+            size: self.parent.size
+            pos: self.parent.pos
+
+        BoxLayout:
+            orientation: "vertical"
+            padding: 20
+            spacing: 10
+
+            # Ciudad grande arriba
+            Label:
+                text: f"{root.city}, {root.country}"
+                font_size: 36
+                bold: True
+                color: 1,1,1,1
+                size_hint_y: None
+                height: 50
+                halign: "center"
+                valign: "middle"
+                text_size: self.size
+
+            # Buscador de ciudad
+            BoxLayout:
+                size_hint_y: None
+                height: 40
+                spacing: 10
+                TextInput:
+                    id: city_input
+                    text: root.city
+                    multiline: False
+                    on_text_validate: root.update_city(self.text)
+                Button:
+                    text: "Buscar"
+                    size_hint_x: None
+                    width: 100
+                    on_release: root.update_city(city_input.text)
+
+            # Temperatura y descripción
+            Label:
+                text: root.temperature
+                font_size: 48
+                bold: True
+                color: 1,1,1,1
+            Label:
+                text: root.description
+                font_size: 24
+                color: 1,1,1,1
+            Label:
+                text: root.temp_min_max
+                font_size: 18
+                color: 1,1,1,1
+
+            # Pronóstico horizontal
+            ScrollView:
+                size_hint_y: None
+                height: 170
+                do_scroll_y: False
+                do_scroll_x: True
+
+                GridLayout:
+                    id: forecast_container
+                    rows: 1            # fila única para horizontal
+                    size_hint_x: None
+                    width: self.minimum_width
+                    height: 150
+                    spacing: 10
+                    padding: 5
